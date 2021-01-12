@@ -8,6 +8,9 @@ public class TestServiceImpl implements ApiService {
     @PostMapping("getMsg")
     @Override
     public String getMsg(String id) {
-        return "success...;";
+        return "success...";
+    }
+    public String getMsg1(String id) {
+        return "success...";
     }
 }
