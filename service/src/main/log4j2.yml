@@ -1,0 +1,46 @@
+Configutation:
+  status: WARN
+  monitorInterval: 30
+
+  Appenders:
+    Console:
+      name: ConsoleAppender
+      target: SYSTEM_OUT
+      PatternLayout:
+        pattern: "%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level [%X{traceId}] [%thread] [%X{requestId}] %logger{0}:%line - %msg%n"
+
+    RollingFile:
+      - name: FileAppender
+        fileName: ../logs/xianzhi-web.log
+        filePattern: "../logs/%d{yyyy-MM-dd HH}/xianzhi-web.log"
+        PatternLayout:
+          pattern: "%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level [%X{traceId}] [%thread] [%X{requestId}] %logger{0}:%line - %msg%n"
+        Policies:
+          TimeBasedTriggeringPolicy:
+            modulate: true
+            interval: 1
+        DefaultRollOverStrategy:
+          max: 30
+      - name: ErrorAppender
+        fileName: ../logs/web-error.log
+        filePattern: "../logs/%d{yyyy-MM-dd HH}/web-error.log"
+        PatternLayout:
+          pattern: "%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level [%X{traceId}] [%thread] [%X{requestId}] %logger{0}:%line - %msg%n"
+        Policies:
+          TimeBasedTriggeringPolicy:
+            modulate: true
+            interval: 1
+        DefaultRollOverStrategy:
+          max: 30
+
+  Loggers:
+    Root:
+      level: info
+      AppenderRef:
+        - ref: ConsoleAppender
+    Logger:
+      - name: com.baijia.xianzhi.xianzhimagicpageweb
+        level: info
+        AppenderRef:
+          - ref: ErrorAppender
+            level: error

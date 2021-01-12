@@ -1,0 +1,58 @@
+test:
+  uri: lb://client
+
+spring:
+  application:
+    name: springgateway
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          lower-case-service-id: true
+# predicates config
+#      routes:
+#        - id: after_route
+#          uri: https://example.org
+#          predicates:
+#            - After=2017-01-20T17:42:47.789-07:00[America/Denver]
+#        - id: before_route
+#          uri: https://example.org
+#          predicates:
+#            - Before=2017-01-20T17:42:47.789-07:00[America/Denver]
+#        - id: between_route
+#          uri: https://example.org
+#          predicates:
+#            - Between=2017-01-20T17:42:47.789-07:00[America/Denver], 2017-01-21T17:42:47.789-07:00[America/Denver]
+#        - id: cookie_route
+#          uri: https://example.org
+#          predicates:
+#              - Cookie=chocolate, ch.p
+# filter config
+# uri 请求被转发的路径
+#        - id: add_request_header_route
+#          uri: lb://openfeign-server
+#          filters:
+#            - AddRequestHeader=X-Request-red, blue
+        - id: requestratelimiter_route
+          uri: https://example.org
+          filters:
+          - name: RequestRateLimiter
+            args:
+              redis-rate-limiter.replenishRate: 10
+              redis-rate-limiter.burstCapacity: 20
+              redis-rate-limiter.requestedTokens: 1
+#eureka:
+#  client:
+#    service-url:
+#      defaultZone: http://localhost:8761/eureka
+
+server:
+  port: 9000
+
+#hystrix:
+#  command:
+#    fallbackcmd:
+#      execution:
+#        isolation:
+#          thread:
+#            timeoutInMilliseconds: 5000
