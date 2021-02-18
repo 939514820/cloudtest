@@ -1,4 +1,4 @@
-package com.example.service.impl;
+package com.example.service.demo;
 
 import com.example.demo.sdk.ApiService;
 import org.springframework.web.bind.annotation.PostMapping;
