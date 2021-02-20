@@ -1,24 +1,23 @@
 package com.example.service.hytrix.controller;
 
+import com.alibaba.fastjson.JSON;
+import com.example.service.hytrix.CommandParam;
+import com.example.service.hytrix.CommandResponse;
 import com.example.service.hytrix.service.CollapserService;
+import com.example.service.hytrix.service.HystrixThreadPoolService;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCollapser;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
 import com.netflix.hystrix.strategy.concurrency.HystrixRequestContext;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
 
 @RestController
 @RequestMapping("/hytrix")
@@ -61,17 +60,13 @@ public class HytrixTestController {
         return "熔断了";
     }
 
-
     @Resource
-    private CollapserService collapserService;
+    private HystrixThreadPoolService hystrixThreadPoolService;
 
-    @RequestMapping("/testColapse")
-    public String testColapse(String name) throws ExecutionException, InterruptedException {
-        HystrixRequestContext context = HystrixRequestContext.initializeContext();
-        String res = collapserService.test(name).get();
-        context.close();
-        return res;
+    @RequestMapping("deal")
+    public String submitRequest(CommandParam param) throws ExecutionException, InterruptedException {
+        CommandResponse response = hystrixThreadPoolService.submit(param);
+        return JSON.toJSONString(response);
     }
-
 
 }
